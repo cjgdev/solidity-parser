@@ -180,7 +180,12 @@ variabledefinition : variabledeclaration ( '=' expression )? ';' ;
 //           |_|
 
 expression
-  : lhs_expression ('++' | '--') | functioncall | newexpression | memberaccess | indexaccess | '(' expression ')'
+  : lhs_expression ('++' | '--')
+  | expression '(' expression? ( ',' expression )* ')'
+  | newexpression
+  | memberaccess
+  | indexaccess
+  | '(' expression ')'
   | ('!' | '~' | 'delete' | '++' | '--' | '+' | '-') expression
   | expression '**' expression
   | expression ('*' | '/' | '%') expression
@@ -202,7 +207,7 @@ expression
   ;
 
 assemblyexpression
-  : functioncall
+  : assemblyexpression '(' assemblyexpression? ( ',' assemblyexpression )* ')'
   | 'let' Identifier ':=' assemblyexpression
   | '=:' lhs_expression
   | ':' Identifier
@@ -223,7 +228,6 @@ literal
 
 primaryexpression : Identifier | Identifier '.' Identifier | BooleanLiteral | NumberLiteral | StringLiteral ;
 
-functioncall : lhs_expression '(' expression? ( ',' expression )* ')' ;
 newexpression : 'new' Identifier '(' expression* ')' ;
 memberaccess : lhs_expression '.' Identifier ;
 indexaccess : lhs_expression '[' expression? ']' ;
